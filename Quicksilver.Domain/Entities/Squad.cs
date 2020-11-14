@@ -38,14 +38,27 @@ namespace Quicksilver.Domain.Entities
             {
                 if (MembroJaAssociado(pessoa.Id))
                     throw new MembroJaAdicionadoException();
+
+                pessoa.VincularSquad(this);
             }
 
             _Membros.AddRange(pessoas);
         }
 
+        public void RemoverMembro(Pessoa pessoa)
+        {
+            if (!_Membros.Remove(pessoa))
+                throw new Exception("Este membro não está associado à Squad");
+        }
+
         private bool MembroJaAssociado(Guid idPessoa)
         {
             return _Membros.Any(pessoa => pessoa.Id.Equals(idPessoa));
+        }
+
+        public override string ToString()
+        {
+            return $"Id: {Id} - Nome: {Nome}";
         }
     }
 }

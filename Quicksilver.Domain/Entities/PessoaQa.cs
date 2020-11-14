@@ -10,7 +10,7 @@ namespace Quicksilver.Domain.Entities
         {
         }
 
-        public PessoaQA(string nome, Guid id) : base(nome, id)
+        public PessoaQA(string nome, Guid id, Squad squad) : base(nome, id, squad)
         {
         }
 
