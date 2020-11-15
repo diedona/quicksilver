@@ -1,7 +1,10 @@
 ﻿using Quicksilver.Domain.Entities;
+using Quicksilver.Domain.Exceptions.Pessoa;
 using Quicksilver.Domain.Exceptions.Squad;
+using Quicksilver.Domain.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Xunit;
 
@@ -15,9 +18,18 @@ namespace Quicksilver.Tests.Entities
             Squad squadFranquia = new Squad("Franquia", true);
             Pessoa programador = new PessoaDev("Josiscleide");
             Pessoa qualidade = new PessoaQA("Micaleide");
+            SquadServices squadServices = new SquadServices();
 
-            squadFranquia.AdicionarMembros(new List<Pessoa>() { programador, qualidade });
-            Assert.True(true);
+            var novasPessoasDaSquad = new List<Pessoa>() { programador, qualidade };
+            squadServices.VincularSquad(novasPessoasDaSquad, squadFranquia);
+
+            foreach (var pessoa in novasPessoasDaSquad)
+            {
+                if (pessoa.Squad.Id != squadFranquia.Id)
+                    throw new Exception("Pessoa não está na squad certa");
+            }
+
+            Assert.True(squadFranquia.Membros.Count == novasPessoasDaSquad.Count);
         }
 
         [Fact(DisplayName = "Deve lançar exceção ao adicionar membro repetido")]
@@ -26,10 +38,10 @@ namespace Quicksilver.Tests.Entities
             Squad squadFranquia = new Squad("Franquia", true);
             Pessoa programador = new PessoaDev("Joãlacano");
             Pessoa outroProgramador = new PessoaDev("Vercisleide");
+            SquadServices squadServices = new SquadServices();
 
-            squadFranquia.AdicionarMembro(programador);
-            squadFranquia.AdicionarMembro(outroProgramador);
-            Assert.Throws<MembroJaAdicionadoException>(() => squadFranquia.AdicionarMembro(programador));
+            squadServices.VincularSquad(new List<Pessoa>() { programador, outroProgramador }, squadFranquia);
+            Assert.Throws<PessoaJaTemSquadException>(() => squadServices.VincularSquad(programador, squadFranquia));
         }
     }
 }

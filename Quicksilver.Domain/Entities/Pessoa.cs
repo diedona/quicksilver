@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Quicksilver.Domain.Exceptions.Pessoa;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -21,22 +22,25 @@ namespace Quicksilver.Domain.Entities
         {
         }
 
-        public bool TemSquad()
+        public void SairDaSquad()
         {
-            return (Squad != null);
+            if (!TemSquad())
+                throw new PessoaNaoTemSquadException();
+
+            Squad.RemoverMembro(this);
         }
 
-        public void VincularSquad(Squad squad)
+        public void AssociarSquad(Squad squad)
         {
             if (TemSquad())
-            {
-                if (Squad.Id.Equals(squad.Id))
-                    throw new Exception("Não é possível vincular à mesma squad que este membro já participa.");
-
-                Squad.RemoverMembro(this);
-            }
+                throw new PessoaJaTemSquadException();
 
             Squad = squad;
+        }
+
+        private bool TemSquad()
+        {
+            return (Squad != null);
         }
 
         public abstract string ExibirTipoPessoa();

@@ -29,20 +29,10 @@ namespace Quicksilver.Domain.Entities
 
         public void AdicionarMembro(Pessoa pessoa)
         {
-            AdicionarMembros(new List<Pessoa>() { pessoa });
-        }
+            if (this.MembroJaAssociado(pessoa.Id))
+                throw new MembroJaAdicionadoException();
 
-        public void AdicionarMembros(ICollection<Pessoa> pessoas)
-        {
-            foreach (var pessoa in pessoas)
-            {
-                if (MembroJaAssociado(pessoa.Id))
-                    throw new MembroJaAdicionadoException();
-
-                pessoa.VincularSquad(this);
-            }
-
-            _Membros.AddRange(pessoas);
+            _Membros.Add(pessoa);
         }
 
         public void RemoverMembro(Pessoa pessoa)
