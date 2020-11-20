@@ -21,9 +21,20 @@ namespace Quicksilver.Tests.Entities
         {
             var dev = new PessoaDev("José");
             var squad = new Squad("Franquia", true);
-            dev.AssociarSquad(squad);
 
+            dev.AssociarSquad(squad);
             Assert.Equal(dev.Squad.Id, squad.Id);
+        }
+
+        [Fact]
+        public void Pessoa_Nao_Pode_Estar_Em_Duas_Squads()
+        {
+            var qa = new PessoaQA("Enzo");
+            var squadFranquia = new Squad("Franquia", true);
+            var squadEstrategico = new Squad("Estratégico", true);
+
+            qa.AssociarSquad(squadFranquia);
+            Assert.Throws<PessoaJaTemSquadException>(() => qa.AssociarSquad(squadEstrategico));
         }
     }
 }
