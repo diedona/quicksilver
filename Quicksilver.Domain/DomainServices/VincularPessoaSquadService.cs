@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Quicksilver.Domain.Services
+namespace Quicksilver.Domain.DomainServices
 {
-    public class SquadServices
+    public class VincularPessoaSquadService
     {
         public void VincularSquad(Pessoa pessoa, Squad squad)
         {
